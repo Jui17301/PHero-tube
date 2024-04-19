@@ -5,6 +5,7 @@ const loadData = async()=>{
   return data.data;
  
 }
+let data;
 const displayCategoryMenu=async()=>{
   const data = await loadData();
   const menuContainer = document.getElementById('button-Container');
@@ -27,12 +28,13 @@ const displayCategoryMenu=async()=>{
          
          const displayAll=async(id)=>{
           const res =await fetch(` https://openapi.programming-hero.com/api/videos/category/${id}`);
-          const data = await res.json(); 
+           data = await res.json();
+          // const sort = data; 
           const mainContainer = document.getElementById('mainContainer');
            mainContainer.innerHTML="";  
           if( data.data && data.data.length>0){ 
             
-   data.data.forEach((product)=>{
+   data.data.foreach((product)=>{
   
           const Hours = parseInt(product.others?.posted_date /3600);
           const leftSecond = parseInt((product.others?.posted_date %3600));
@@ -72,9 +74,12 @@ const displayCategoryMenu=async()=>{
              
           `
           mainContainer.appendChild(div);
+        
+        })
 
-         })
+        // console.log(value);
          }
+        //  console.log(value);
 
          else {
           mainContainer.innerHTML=`
@@ -91,16 +96,20 @@ const displayCategoryMenu=async()=>{
                 `
           } 
 // console.log(data.data);
-          // return data.data;
+          // return sort;
         }
         
       
-    document.getElementById("sortAll").addEventListener('click',function sort(){
-    
+    document.getElementById("sortAll").addEventListener('click',async function(){
+      value.sort((a,b)=>{
+       return parseFloat(b.others.views) - parseFloat(a.others.views);
+      //  console.log(a,b)
+      
+      });
+      await displayAll(value);
       // console.log(data.data);
-      // return b.product.others.views - a.product.others.views;
-     
-    })
+    }
+  )
         
          loadData();
 displayCategoryMenu();
